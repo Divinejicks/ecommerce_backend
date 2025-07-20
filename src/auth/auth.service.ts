@@ -48,13 +48,14 @@ export class AuthService {
             throw new ForbiddenException("Credentials incorrect");
         }
         
-        return this.signToken(user.id, user.email);
+        return this.signToken(user.id, user.email, user.roles);
     }
 
-    async signToken(userId: number, email: string) : Promise<{ access_token: string }> {
+    async signToken(userId: number, email: string, roles: string[]) : Promise<{ access_token: string }> {
         const payload = {
             sub: userId,
-            email
+            email,
+            roles
         }
         const token = await this.jwt.signAsync(payload, {
             expiresIn: "15m",

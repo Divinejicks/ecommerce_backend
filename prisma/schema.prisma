@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   createdAt    DateTime @default(now())
@@ -18,9 +23,29 @@ model User {
   passwordHash String
   firstName    String?
   lastName     String?
-  role         String   @default("USER")
+  roles        Role[]   @default([USER])
+
+  orders Order[] // A user can have many orders
 
   @@map("users")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  isPublished Boolean
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  orderItems OrderItem[] // Many-to-many on the OrderItem
+
+  @@map("products")
 }
 
 model Category {
@@ -28,7 +53,37 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
-  icon      String?
+
+  products Product[] // A category has many products
 
   @@map("categories")
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  totalAmount Float
+  status      String   @default("PENDING")
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  orderItems OrderItem[] // One order has many order items
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  quantity Int
+  price    Float
+
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
 }
