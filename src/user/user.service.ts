@@ -62,4 +62,9 @@ export class UserService {
             }
         })
     }
+
+    async getCount() : Promise<number> {
+        const count =  await this.prisma.user.count();
+        return count;
+    }
 }

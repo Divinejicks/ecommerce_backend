@@ -6,7 +6,7 @@ import { CreateOrderDto } from './dto';
 export class OrderService {
     constructor(private prisma: PrismaService) { }
 
-    async createOrder(userId:number, dto: CreateOrderDto) {
+    async createOrder(userId: number, dto: CreateOrderDto) {
         const order = await this.prisma.order.create({
             data: {
                 user: { connect: { id: userId } },
@@ -35,7 +35,7 @@ export class OrderService {
 
     async getAllMyOrders(userId: number) {
         const orders = await this.prisma.order.findMany({
-            where:{
+            where: {
                 userId
             },
             include: { orderItems: true },
@@ -55,5 +55,10 @@ export class OrderService {
 
     async deleteOrder(id: number, userId: number) {
         await this.prisma.order.delete({ where: { id, userId } });
+    }
+
+    async getCount(): Promise<number> {
+        const count = await this.prisma.order.count()
+        return count;
     }
 }

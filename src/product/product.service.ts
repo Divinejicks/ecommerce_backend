@@ -36,4 +36,9 @@ export class ProductService {
     async deleteProduct(id: number) {
         await this.prisma.product.delete({ where: { id } });
     }
+
+    async getCount() : Promise<number> {
+        const count = await this.prisma.product.count()
+        return count
+    }
 }
