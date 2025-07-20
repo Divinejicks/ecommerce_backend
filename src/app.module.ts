@@ -5,8 +5,9 @@ import { CategoryModule } from './category/category.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal: true}), AuthModule, UserModule, CategoryModule, PrismaModule, ProductModule],
+  imports: [ConfigModule.forRoot({isGlobal: true}), AuthModule, UserModule, CategoryModule, PrismaModule, ProductModule, OrderModule],
 })
 export class AppModule {}
