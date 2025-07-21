@@ -3,8 +3,13 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { runSeed } from './seed/seed';
 
 async function bootstrap() {
+  if (process.env.SEED_DB === 'true') {
+    console.log('🔄 Running DB seed...');
+    await runSeed();
+  }
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

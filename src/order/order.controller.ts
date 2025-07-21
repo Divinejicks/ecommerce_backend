@@ -47,6 +47,18 @@ export class OrderController {
         return this.orderService.getAllMyOrdersPaginated(userId, parsedPage, parsedSize);
     }
 
+    @Get("get-all-orders-paginated")
+    @ApiOperation({ summary: "Get all orders paginated" })
+    @Roles([Role.USER])
+    getAllOrdersPaginated(
+        @Query('page', ParseIntPipe) page: number,
+        @Query('pageSize', ParseIntPipe) pageSize: number,
+    ) {
+        const parsedPage = page || 1;
+        const parsedSize = pageSize || 5;
+        return this.orderService.getAllOrdersPaginated(parsedPage, parsedSize);
+    }
+
     @Get(':id')
     @ApiOperation({ summary: "Get order by Id" })
     @Roles([Role.USER])

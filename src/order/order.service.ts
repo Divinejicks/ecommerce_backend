@@ -67,6 +67,28 @@ export class OrderService {
         };
     }
 
+    async getAllOrdersPaginated(page: number, pageSize: number) {
+        const skip = (page - 1) * pageSize;
+
+        const [orders, total] = await this.prisma.$transaction([
+            this.prisma.order.findMany({
+                skip,
+                take: pageSize,
+                orderBy: { createdAt: "desc" },
+                include: { orderItems: true },
+            }),
+            this.prisma.order.count(),
+        ]);
+
+        return {
+            data: orders,
+            page,
+            pageSize,
+            total,
+            totalPages: Math.ceil(total / pageSize),
+        };
+    }
+
     async findOne(id: number) {
         const order = await this.prisma.order.findUnique({
             where: { id },
