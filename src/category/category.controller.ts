@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard, RolesGuard } from 'src/auth/guard';
@@ -18,6 +18,18 @@ export class CategoryController {
     @ApiOperation({ summary: "Get all categories" })
     getAllCategories() {
         return this.categoryService.getAllCategories()
+    }
+
+    @Get("get-all-paginated")
+    @Roles([Role.ADMIN])
+    @ApiOperation({ summary: "Get all categories (paginated)" })
+    getAllCategoriesPaginated(
+        @Query('page', ParseIntPipe) page: number,
+        @Query('pageSize', ParseIntPipe) pageSize: number
+    ) {
+        const parsedPage = page || 1;
+        const parsedSize = pageSize || 10;
+        return this.categoryService.getAllCategoriesPaginated(parsedPage, parsedSize);
     }
 
     @Post("create")

@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Role } from 'generated/prisma';
-import { Roles } from 'src/auth/decorator';
+import { GetUser, Roles } from 'src/auth/decorator';
 import { JwtGuard, RolesGuard } from 'src/auth/guard';
 import { DashboardService } from './dashboard.service';
 import { OrderService } from 'src/order/order.service';
@@ -38,4 +38,22 @@ export class DashboardController {
             topThreeProducts,
         };
     }
+
+    @Get("get-user-dashboard-data")
+    @Roles([Role.USER])
+    @ApiOperation({ summary: "Get dashboard data for users" })
+    async getUserDashboardData(@GetUser('id') userId:number) {
+        const [userOrders, totalProducts, topThreeProducts] = await Promise.all([
+            this.orderService.getUserOrderCount(userId), 
+            this.productService.getCount(),
+            this.dashboardService.topThreeProducts(),
+        ]);
+
+        return {
+            userOrders,
+            totalProducts,
+            topThreeProducts,
+        };
+    }
+
 }

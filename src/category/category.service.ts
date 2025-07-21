@@ -11,6 +11,26 @@ export class CategoryService {
         return this.prisma.category.findMany({})
     }
 
+    // category.service.ts
+    async getAllCategoriesPaginated(page: number, pageSize: number) {
+        const skip = (page - 1) * pageSize;
+
+        const [data, total] = await Promise.all([
+            this.prisma.category.findMany({
+                skip,
+                take: pageSize,
+                orderBy: { createdAt: 'desc' }, 
+            }),
+            this.prisma.category.count(),
+        ]);
+
+        return {
+            data,
+            total,
+        };
+    }
+
+
     async createCategory(dto: CategoryDto) {
         try {
             const category = await this.prisma.category.create({
