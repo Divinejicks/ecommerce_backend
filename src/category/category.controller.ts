@@ -9,33 +9,36 @@ import { CategoryDto, EditCategoryDto } from './dto';
 @ApiTags("Category")
 @ApiBearerAuth()
 @UseGuards(JwtGuard, RolesGuard)
-@Roles([Role.ADMIN])
 @Controller('category')
 export class CategoryController {
-    constructor(private categoryService: CategoryService){}
+    constructor(private categoryService: CategoryService) { }
 
     @Get("get-all")
-    @ApiOperation({summary: "Get all categories"})
-    getAllCategories(){
+    @Roles([Role.ADMIN])
+    @ApiOperation({ summary: "Get all categories" })
+    getAllCategories() {
         return this.categoryService.getAllCategories()
     }
 
     @Post("create")
-    @ApiOperation({summary: "Create category"})
-    createCategory(@Body() dto: CategoryDto){
+    @Roles([Role.ADMIN])
+    @ApiOperation({ summary: "Create category" })
+    createCategory(@Body() dto: CategoryDto) {
         return this.categoryService.createCategory(dto)
     }
 
     @Patch("update-category")
-    @ApiOperation({summary: "Update category"})
-    updateCategory(@Body() dto: EditCategoryDto){
+    @Roles([Role.ADMIN])
+    @ApiOperation({ summary: "Update category" })
+    updateCategory(@Body() dto: EditCategoryDto) {
         return this.categoryService.updateCategory(dto)
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
+    @Roles([Role.ADMIN])
     @Delete(":id")
-    @ApiOperation({summary: "Delete category"})
-    deleteCategory(@Param('id', ParseIntPipe) id: number){
+    @ApiOperation({ summary: "Delete category" })
+    deleteCategory(@Param('id', ParseIntPipe) id: number) {
         return this.categoryService.deleteCategory(id)
     }
 

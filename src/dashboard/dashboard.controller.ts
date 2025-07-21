@@ -11,7 +11,6 @@ import { ProductService } from 'src/product/product.service';
 @ApiTags("Dashboard")
 @ApiBearerAuth()
 @UseGuards(JwtGuard, RolesGuard)
-@Roles([Role.ADMIN])
 @Controller('dashboard')
 export class DashboardController {
     constructor(private dashboardService: DashboardService,
@@ -21,6 +20,7 @@ export class DashboardController {
     ) { }
 
     @Get("get-dashboard-data")
+    @Roles([Role.ADMIN])
     @ApiOperation({ summary: "Get dashboard data for statistics" })
     async getAdminData() {
         const [totalOrders, totalUsers, totalProducts, topThreeProducts] =
