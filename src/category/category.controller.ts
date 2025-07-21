@@ -21,7 +21,7 @@ export class CategoryController {
     }
 
     @Get("get-all-paginated")
-    @Roles([Role.ADMIN])
+    @Roles([Role.ADMIN, Role.USER])
     @ApiOperation({ summary: "Get all categories (paginated)" })
     getAllCategoriesPaginated(
         @Query('page', ParseIntPipe) page: number,

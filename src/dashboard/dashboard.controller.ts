@@ -43,14 +43,14 @@ export class DashboardController {
     @Roles([Role.USER])
     @ApiOperation({ summary: "Get dashboard data for users" })
     async getUserDashboardData(@GetUser('id') userId:number) {
-        const [userOrders, totalProducts, topThreeProducts] = await Promise.all([
+        const [totalOrders, totalProducts, topThreeProducts] = await Promise.all([
             this.orderService.getUserOrderCount(userId), 
             this.productService.getCount(),
             this.dashboardService.topThreeProducts(),
         ]);
 
         return {
-            userOrders,
+            totalOrders,
             totalProducts,
             topThreeProducts,
         };
